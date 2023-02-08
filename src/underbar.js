@@ -196,7 +196,7 @@
     // iterate over the collection
     _.each(collection, function (item) {
       accumulator = iterator(accumulator, item);
-    })
+    });
     // using each item in collection and accumulator, call iterator
 
     // return accumulator
@@ -334,31 +334,34 @@
     debugger;
     // declare a subFunc
     var insideFunc = function () {
-      // iterate over argGroups
-      // while checking if the arguments were seen before
-      // if true, return the previously evaluated result
+      // declare arguments in an array format to be able to compare elements later
       if (!Array.isArray(arguments[0])) {
         var currentArguments = [...arguments]; // convert it into array datatype
       } else {
+        // add 'array' element to distinguish from primitive type arguments
         var currentArguments = ['array'].concat(arguments[0]);
       }
 
+      // iterate over argGroups
+      // while comparing each element of argGroup with that of currentArguments
       for (let i = 0; i < currentArguments.length; i++) {
+        // if it is the first time, skip the element comparing process
         if (!argGroups[i]) { break; }
-        var arraySameCheck = true; // set up
+        // iterate over each element of current arguments, comparing with each argGroup
+        var arraySameCheck = true;
         _.each(currentArguments, function(item, index) {
           arraySameCheck = arraySameCheck && (item === argGroups[i][index]);
         });
+        // if all the elements are the same, return the previously evaluated result
         if (arraySameCheck) {
-          console.log('Seen it!');
           return results[i];
         }
       }
       // if not,store the new arguments and the new evaluated value of invoking 'func' with the given arguments
-      // and return the result
       argGroups.push(currentArguments);
       var newResult = func.apply(this, arguments);
       results.push(newResult);
+      // and return the result
       return newResult;
     };
     return insideFunc;
